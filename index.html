@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="om">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulchinsa Magalaa Calanqoo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- LOGIN -->
+  <section id="loginPage" class="login-page">
+    <div class="login-box">
+      <div class="logo">🏛️</div>
+      <h1>Bulchinsa Magalaa Calanqoo</h1>
+      <p>Sirna Bulchiinsa Dijitaalaa</p>
+
+      <input id="username" type="text" placeholder="Maqaa fayyadamaa">
+      <input id="password" type="password" placeholder="Password">
+
+      <button onclick="login()">Seeni</button>
+
+      <p id="loginError" class="error"></p>
+
+      <small>
+        Demo Login:<br>
+        Username: <b>admin</b><br>
+        Password: <b>1234</b>
+      </small>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <section id="app" class="app hidden">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        🏛️
+        <span>Calanqoo</span>
+      </div>
+
+      <nav>
+        <button onclick="showPage('dashboard')">🏠 Dashboard</button>
+        <button onclick="showPage('galii')">💰 Galii</button>
+        <button onclick="showPage('baasii')">💸 Baasii</button>
+        <button onclick="showPage('gis')">🗺️ GIS / GPS</button>
+        <button onclick="showPage('qabeenya')">🏢 Qabeenya</button>
+        <button onclick="showPage('pirojektii')">🏗️ Pirojektii</button>
+        <button onclick="showPage('suuraa')">📸 Suuraa</button>
+        <button onclick="showPage('gabaasa')">📊 Gabaasa</button>
+        <button onclick="showPage('users')">👥 Users</button>
+      </nav>
+
+      <button class="logout" onclick="logout()">🚪 Ba'i</button>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <header>
+        <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+        <div>
+          <h2 id="pageTitle">Dashboard</h2>
+          <p id="date"></p>
+        </div>
+        <div class="admin">👤 Admin</div>
+      </header>
+
+      <!-- DASHBOARD -->
+      <div id="dashboard" class="page">
+
+        <div class="welcome">
+          <h1>👋 Baga Nagaan Dhuftan!</h1>
+          <p>Sirna Bulchinsa Magalaa Calanqoo</p>
+        </div>
+
+        <div class="cards">
+          <div class="card income">
+            <span>💰</span>
+            <h3>Galii Waliigalaa</h3>
+            <strong id="totalIncome">0 Birr</strong>
+          </div>
+
+          <div class="card expense">
+            <span>💸</span>
+            <h3>Baasii Waliigalaa</h3>
+            <strong id="totalExpense">0 Birr</strong>
+          </div>
+
+          <div class="card">
+            <span>🏗️</span>
+            <h3>Pirojektii</h3>
+            <strong id="projectCount">0</strong>
+          </div>
+
+          <div class="card">
+            <span>🏢</span>
+            <h3>Qabeenya</h3>
+            <strong id="assetCount">0</strong>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>📋 Sochiiwwan Dhiheenyaa</h2>
+          <div id="recentActivity"></div>
+        </div>
+
+      </div>
+
+      <!-- GALII -->
+      <div id="galii" class="page hidden">
+        <div class="panel">
+          <h2>💰 Galmee Galii</h2>
+
+          <form onsubmit="addIncome(event)">
+            <input id="incomeReason" placeholder="Sababa galii" required>
+            <input id="incomeAmount" type="number" placeholder="Hanga Birrii" required>
+            <input id="incomeDate" type="date" required>
+            <button>➕ Galii Galmeessi</button>
+          </form>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Sababa</th>
+                  <th>Birr</th>
+                  <th>Guyyaa</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="incomeTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- BAASII -->
+      <div id="baasii" class="page hidden">
+        <div class="panel">
+          <h2>💸 Galmee Baasii</h2>
+
+          <form onsubmit="addExpense(event)">
+            <input id="expenseReason" placeholder="Sababa baasii" required>
+            <input id="expenseAmount" type="number" placeholder="Hanga Birrii" required>
+            <input id="expenseDate" type="date" required>
+            <button>➕ Baasii Galmeessi</button>
+          </form>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Sababa</th>
+                  <th>Birr</th>
+                  <th>Guyyaa</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="expenseTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- GIS -->
+      <div id="gis" class="page hidden">
+        <div class="panel">
+          <h2>🗺️ GIS / GPS</h2>
+          <p>GPS kee argachuuf button armaan gadii cuqaasi.</p>
+
+          <button onclick="getLocation()">📍 GPS Koo Argadhu</button>
+
+          <div id="locationResult" class="location-box">
+            GPS ammallee hin argamne.
+          </div>
+
+          <div class="map-placeholder">
+            🗺️
+            <h3>Map Area</h3>
+            <p>Version itti aanu keessatti map sirrii itti daballa.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- QABEENYA -->
+      <div id="qabeenya" class="page hidden">
+        <div class="panel">
+          <h2>🏢 Qabeenya Magaalaa</h2>
+
+          <form onsubmit="addAsset(event)">
+            <input id="assetName" placeholder="Maqaa qabeenyaa" required>
+            <input id="assetType" placeholder="Gosa qabeenyaa" required>
+            <input id="assetValue" type="number" placeholder="Gatii (Birr)" required>
+            <button>➕ Qabeenya Galmeessi</button>
+          </form>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Maqaa</th>
+                  <th>Gosa</th>
+                  <th>Gatii</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="assetTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIROJEKTII -->
+      <div id="pirojektii" class="page hidden">
+        <div class="panel">
+          <h2>🏗️ Pirojektoota</h2>
+
+          <form onsubmit="addProject(event)">
+            <input id="projectName" placeholder="Maqaa pirojektii" required>
+            <input id="projectLocation" placeholder="Bakka" required>
+            <input id="projectBudget" type="number" placeholder="Budget Birr" required>
+            <select id="projectStatus">
+              <option>Karoorfame</option>
+              <option>Jalqabame</option>
+              <option>Hojii irra jira</option>
+              <option>Xumurame</option>
+            </select>
+            <button>➕ Pirojektii Galmeessi</button>
+          </form>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Maqaa</th>
+                  <th>Bakka</th>
+                  <th>Budget</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="projectTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUURAA -->
+      <div id="suuraa" class="page hidden">
+        <div class="panel">
+          <h2>📸 Galmee Suuraa</h2>
+
+          <input type="file" id="photoInput" accept="image/*" multiple
+                 onchange="previewPhotos(event)">
+
+          <div id="photoGallery" class="gallery"></div>
+        </div>
+      </div>
+
+      <!-- GABAASA -->
+      <div id="gabaasa" class="page hidden">
+        <div class="panel">
+          <h2>📊 Gabaasa</h2>
+
+          <div class="report-box">
+            <h3>Cuunfaa Maallaqaa</h3>
+            <p>💰 Galii: <b id="reportIncome">0 Birr</b></p>
+            <p>💸 Baasii: <b id="reportExpense">0 Birr</b></p>
+            <p>💵 Hafe: <b id="reportBalance">0 Birr</b></p>
+          </div>
+
+          <button onclick="window.print()">🖨️ Print Gabaasa</button>
+        </div>
+      </div>
+
+      <!-- USERS -->
+      <div id="users" class="page hidden">
+        <div class="panel">
+          <h2>👥 Bulchiinsa Users</h2>
+
+          <form onsubmit="addUser(event)">
+            <input id="newUser" placeholder="Maqaa user" required>
+            <select id="userRole">
+              <option>Admin</option>
+              <option>Finance</option>
+              <option>GIS Officer</option>
+              <option>Project Officer</option>
+              <option>Viewer</option>
+            </select>
+            <button>➕ User Dabali</button>
+          </form>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>User</th>
+                  <th>Role</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="userTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
