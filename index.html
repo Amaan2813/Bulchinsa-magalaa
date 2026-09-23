@@ -1,321 +1,95 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="om">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bulchinsa Magalaa Calanqoo</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#176b3a"><link rel="manifest" href="manifest.json">
+<title>Calanqoo City Data Management</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;color:#18212b}
+header{background:#176b3a;color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
+header h1{font-size:19px;margin:0}.wrap{display:flex;min-height:calc(100vh - 58px)}
+nav{width:230px;background:#fff;border-right:1px solid #ddd;padding:10px}.nav{width:100%;padding:11px;margin:3px 0;border:0;background:#fff;text-align:left;border-radius:8px;cursor:pointer}.nav:hover,.nav.active{background:#e8f4ed}
+main{flex:1;padding:18px;max-width:1400px}.page{display:none}.page.active{display:block}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.card,.panel{background:#fff;border:1px solid #ddd;border-radius:12px;padding:16px;box-shadow:0 1px 2px #0001}.card b{font-size:23px;display:block;margin-top:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+input,select,textarea,button{font:inherit}input,select,textarea{width:100%;padding:9px;border:1px solid #bbb;border-radius:7px;margin-top:4px}textarea{min-height:70px}button{padding:9px 13px;border:0;border-radius:7px;cursor:pointer;background:#176b3a;color:#fff;margin:4px 2px}.secondary{background:#52606d}.danger{background:#a62d2d}.muted{color:#68737d;font-size:13px}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;margin-top:12px;background:#fff}th,td{padding:8px;border-bottom:1px solid #ddd;text-align:left;white-space:nowrap}th{background:#eef2f0}.toolbar{display:flex;gap:7px;flex-wrap:wrap;align-items:end}.toolbar>*{min-width:130px}.map{height:390px;border:2px solid #8aa796;border-radius:10px;position:relative;overflow:hidden;background:linear-gradient(#eaf3ed 1px,transparent 1px),linear-gradient(90deg,#eaf3ed 1px,transparent 1px);background-size:30px 30px}.point{position:absolute;transform:translate(-50%,-100%);font-size:24px}.login{min-height:100vh;display:grid;place-items:center;background:#e8f1eb}.loginbox{width:min(390px,92vw);background:#fff;padding:25px;border-radius:14px;box-shadow:0 8px 30px #0002}.hidden{display:none!important}.photo{max-width:90px;max-height:70px;border-radius:6px}.badge{display:inline-block;padding:4px 8px;border-radius:12px;background:#e8f4ed}.note{padding:10px;background:#fff7d6;border-left:4px solid #d5a300;margin:10px 0}.small{font-size:12px}
+@media(max-width:760px){nav{width:64px;padding:6px}.nav{font-size:0;text-align:center}.nav::first-letter{font-size:20px}main{padding:10px}.grid2{grid-template-columns:1fr}header h1{font-size:15px}}
+@media print{header,nav,.no-print{display:none!important}main{padding:0}.page{display:none}.page.active{display:block}.panel,.card{box-shadow:none;border:0}}
+</style></head>
 <body>
+<div id="login" class="login"><div class="loginbox">
+<h2>🏛️ Calanqoo City Data Management</h2><p class="muted">Prototype guutuu — server deployment irratti qophaa'e</p>
+<label>Username<input id="lu"></label><label>Password<input id="lp" type="password"></label>
+<button onclick="login()">Seeni</button><p class="small">Demo: admin/1234 · finance/1234 · gis/1234 · data/1234 · supervisor/1234</p>
+</div></div>
+<div id="app" class="hidden"><header><h1>🏛️ CALANQOO CITY DATA MANAGEMENT SYSTEM</h1><div><span id="who"></span> <button class="secondary" onclick="logout()">Ba'i</button></div></header>
+<div class="wrap"><nav>
+<button class="nav active" onclick="show('dash',this)">🏠 Dashboard</button>
+<button class="nav" onclick="show('finance',this)">💰 Galii</button><button class="nav" onclick="show('expense',this)">💸 Baasii</button>
+<button class="nav" onclick="show('people',this)">👥 Uummata</button><button class="nav" onclick="show('assets',this)">🏢 Qabeenya</button>
+<button class="nav" onclick="show('projects',this)">🏗️ Pirojektii</button><button class="nav" onclick="show('gis',this)">🗺️ GIS</button>
+<button class="nav" onclick="show('reports',this)">📊 Gabaasa</button><button class="nav" onclick="show('excel',this)">📥 Excel</button>
+<button class="nav" onclick="show('audit',this)">📝 Audit</button><button class="nav" onclick="show('backup',this)">💾 Backup</button>
+</nav><main>
 
-  <!-- LOGIN -->
-  <section id="loginPage" class="login-page">
-    <div class="login-box">
-      <div class="logo">🏛️</div>
-      <h1>Bulchinsa Magalaa Calanqoo</h1>
-      <p>Sirna Bulchiinsa Dijitaalaa</p>
+<section id="dash" class="page active"><h2>Dashboard</h2><div class="cards">
+<div class="card">Galii<b id="dIncome">0</b> ETB</div><div class="card">Baasii<b id="dExpense">0</b> ETB</div><div class="card">Hafe<b id="dBalance">0</b> ETB</div>
+<div class="card">Uummata<b id="dPeople">0</b></div><div class="card">Qabeenya<b id="dAssets">0</b></div><div class="card">Pirojektii<b id="dProjects">0</b></div>
+</div><div class="panel" style="margin-top:12px"><h3>Sirna</h3><p>Login role, audit log, GPS, photo, report, CSV/Excel-compatible import/export, backup/restore fi PWA ni qaba.</p></div></section>
 
-      <input id="username" type="text" placeholder="Maqaa fayyadamaa">
-      <input id="password" type="password" placeholder="Password">
+<section id="finance" class="page"><h2>Galii</h2><div class="panel"><div class="grid">
+<label>Guyyaa<input id="fiDate" type="date"></label><label>Madda Galii<input id="fiSource"></label><label>Receipt No<input id="fiReceipt"></label><label>Qarshii<input id="fiAmount" type="number"></label><label>Waajjira<input id="fiOffice"></label><label>Ibsa<input id="fiNote"></label></div><button onclick="addIncome()">Kuusi</button></div><div class="panel"><input placeholder="Search..." oninput="renderTable('income','fit',this.value)"><div id="fit" class="tablewrap"></div></div></section>
 
-      <button onclick="login()">Seeni</button>
+<section id="expense" class="page"><h2>Baasii</h2><div class="panel"><div class="grid">
+<label>Guyyaa<input id="exDate" type="date"></label><label>Gosa Baasii<input id="exType"></label><label>Voucher No<input id="exVoucher"></label><label>Qarshii<input id="exAmount" type="number"></label><label>Waajjira<input id="exOffice"></label><label>Ibsa<input id="exNote"></label></div><button onclick="addExpense()">Kuusi</button></div><div class="panel"><input placeholder="Search..." oninput="renderTable('expense','ext',this.value)"><div id="ext" class="tablewrap"></div></div></section>
 
-      <p id="loginError" class="error"></p>
+<section id="people" class="page"><h2>Uummata</h2><div class="panel"><div class="grid">
+<label>ID<input id="pId"></label><label>Maqaa<input id="pName"></label><label>Saalqunnamtii<input id="pSex"></label><label>Umurii<input id="pAge" type="number"></label><label>Kebele<input id="pKeb"></label><label>Bilbila<input id="pPhone"></label><label>Hojii<input id="pJob"></label></div><button onclick="addPerson()">Kuusi</button></div><div class="panel"><input placeholder="Search..." oninput="renderTable('people','pt',this.value)"><div id="pt" class="tablewrap"></div></div></section>
 
-      <small>
-        Demo Login:<br>
-        Username: <b>admin</b><br>
-        Password: <b>1234</b>
-      </small>
-    </div>
-  </section>
+<section id="assets" class="page"><h2>Qabeenya + Suuraa</h2><div class="panel"><div class="grid">
+<label>Asset ID<input id="aId"></label><label>Maqaa<input id="aName"></label><label>Gosa<input id="aType"></label><label>Baay'ina<input id="aQty" type="number"></label><label>Gatii<input id="aValue" type="number"></label><label>Bakka<input id="aPlace"></label><label>Haala<input id="aCond"></label><label>Suuraa<input id="aPhoto" type="file" accept="image/*"></label></div><button onclick="addAsset()">Kuusi</button></div><div class="panel"><input placeholder="Search..." oninput="renderTable('assets','at',this.value)"><div id="at" class="tablewrap"></div></div></section>
 
-  <!-- APP -->
-  <section id="app" class="app hidden">
+<section id="projects" class="page"><h2>Pirojektii + Suuraa</h2><div class="panel"><div class="grid">
+<label>Project ID<input id="prId"></label><label>Maqaa<input id="prName"></label><label>Gosa<input id="prType"></label><label>Budget<input id="prBudget" type="number"></label><label>Haala<input id="prStatus"></label><label>Bakka<input id="prPlace"></label><label>Suuraa<input id="prPhoto" type="file" accept="image/*"></label><label>Ibsa<input id="prNote"></label></div><button onclick="addProject()">Kuusi</button></div><div class="panel"><input placeholder="Search..." oninput="renderTable('projects','prt',this.value)"><div id="prt" class="tablewrap"></div></div></section>
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-      <div class="brand">
-        🏛️
-        <span>Calanqoo</span>
-      </div>
+<section id="gis" class="page"><h2>GIS — GPS Point</h2><div class="note">Browser keessatti GPS permission kennuun bakka ammaa qabsiisi. Prototype kana keessatti point, mana, daandii, bishaan, waajjira fi pirojektii galmeessuu dandeessa.</div>
+<div class="toolbar"><select id="gType"><option>Mana</option><option>Daandii</option><option>Bishaan</option><option>Waajjira</option><option>Pirojektii</option><option>GPS Point</option></select><input id="gName" placeholder="Maqaa bakka"><button onclick="gps()">📍 GPS Koo</button><button onclick="clearGis()" class="danger">Haqi</button></div>
+<div id="map" class="map"></div><div id="gt" class="tablewrap"></div></section>
 
-      <nav>
-        <button onclick="showPage('dashboard')">🏠 Dashboard</button>
-        <button onclick="showPage('galii')">💰 Galii</button>
-        <button onclick="showPage('baasii')">💸 Baasii</button>
-        <button onclick="showPage('gis')">🗺️ GIS / GPS</button>
-        <button onclick="showPage('qabeenya')">🏢 Qabeenya</button>
-        <button onclick="showPage('pirojektii')">🏗️ Pirojektii</button>
-        <button onclick="showPage('suuraa')">📸 Suuraa</button>
-        <button onclick="showPage('gabaasa')">📊 Gabaasa</button>
-        <button onclick="showPage('users')">👥 Users</button>
-      </nav>
+<section id="reports" class="page"><h2>Gabaasa</h2><div class="panel toolbar"><label>Jalqaba<input id="rFrom" type="date"></label><label>Dhuma<input id="rTo" type="date"></label><button onclick="report()">Uumi</button><button onclick="window.print()">🖨️ PDF/A4 Print</button></div><div id="reportOut" class="panel"></div></section>
 
-      <button class="logout" onclick="logout()">🚪 Ba'i</button>
-    </aside>
+<section id="excel" class="page"><h2>Excel Import + Export</h2><p class="muted">CSV Excel keessatti banamuu fi Excel irraa save-as CSV gochuun ni danda'ama.</p>
+<div class="panel"><h3>Export</h3><button onclick="csv('income')">Galii CSV</button><button onclick="csv('expense')">Baasii CSV</button><button onclick="csv('people')">Uummata CSV</button><button onclick="csv('assets')">Qabeenya CSV</button><button onclick="csv('projects')">Pirojektii CSV</button></div>
+<div class="panel"><h3>Import</h3><select id="impType"><option value="income">Galii</option><option value="expense">Baasii</option><option value="people">Uummata</option><option value="assets">Qabeenya</option><option value="projects">Pirojektii</option></select><input id="impFile" type="file" accept=".csv"><button onclick="imp()">Import CSV</button></div></section>
 
-    <!-- MAIN -->
-    <main class="main">
-
-      <header>
-        <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-        <div>
-          <h2 id="pageTitle">Dashboard</h2>
-          <p id="date"></p>
-        </div>
-        <div class="admin">👤 Admin</div>
-      </header>
-
-      <!-- DASHBOARD -->
-      <div id="dashboard" class="page">
-
-        <div class="welcome">
-          <h1>👋 Baga Nagaan Dhuftan!</h1>
-          <p>Sirna Bulchinsa Magalaa Calanqoo</p>
-        </div>
-
-        <div class="cards">
-          <div class="card income">
-            <span>💰</span>
-            <h3>Galii Waliigalaa</h3>
-            <strong id="totalIncome">0 Birr</strong>
-          </div>
-
-          <div class="card expense">
-            <span>💸</span>
-            <h3>Baasii Waliigalaa</h3>
-            <strong id="totalExpense">0 Birr</strong>
-          </div>
-
-          <div class="card">
-            <span>🏗️</span>
-            <h3>Pirojektii</h3>
-            <strong id="projectCount">0</strong>
-          </div>
-
-          <div class="card">
-            <span>🏢</span>
-            <h3>Qabeenya</h3>
-            <strong id="assetCount">0</strong>
-          </div>
-        </div>
-
-        <div class="panel">
-          <h2>📋 Sochiiwwan Dhiheenyaa</h2>
-          <div id="recentActivity"></div>
-        </div>
-
-      </div>
-
-      <!-- GALII -->
-      <div id="galii" class="page hidden">
-        <div class="panel">
-          <h2>💰 Galmee Galii</h2>
-
-          <form onsubmit="addIncome(event)">
-            <input id="incomeReason" placeholder="Sababa galii" required>
-            <input id="incomeAmount" type="number" placeholder="Hanga Birrii" required>
-            <input id="incomeDate" type="date" required>
-            <button>➕ Galii Galmeessi</button>
-          </form>
-
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Sababa</th>
-                  <th>Birr</th>
-                  <th>Guyyaa</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="incomeTable"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- BAASII -->
-      <div id="baasii" class="page hidden">
-        <div class="panel">
-          <h2>💸 Galmee Baasii</h2>
-
-          <form onsubmit="addExpense(event)">
-            <input id="expenseReason" placeholder="Sababa baasii" required>
-            <input id="expenseAmount" type="number" placeholder="Hanga Birrii" required>
-            <input id="expenseDate" type="date" required>
-            <button>➕ Baasii Galmeessi</button>
-          </form>
-
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Sababa</th>
-                  <th>Birr</th>
-                  <th>Guyyaa</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="expenseTable"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- GIS -->
-      <div id="gis" class="page hidden">
-        <div class="panel">
-          <h2>🗺️ GIS / GPS</h2>
-          <p>GPS kee argachuuf button armaan gadii cuqaasi.</p>
-
-          <button onclick="getLocation()">📍 GPS Koo Argadhu</button>
-
-          <div id="locationResult" class="location-box">
-            GPS ammallee hin argamne.
-          </div>
-
-          <div class="map-placeholder">
-            🗺️
-            <h3>Map Area</h3>
-            <p>Version itti aanu keessatti map sirrii itti daballa.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- QABEENYA -->
-      <div id="qabeenya" class="page hidden">
-        <div class="panel">
-          <h2>🏢 Qabeenya Magaalaa</h2>
-
-          <form onsubmit="addAsset(event)">
-            <input id="assetName" placeholder="Maqaa qabeenyaa" required>
-            <input id="assetType" placeholder="Gosa qabeenyaa" required>
-            <input id="assetValue" type="number" placeholder="Gatii (Birr)" required>
-            <button>➕ Qabeenya Galmeessi</button>
-          </form>
-
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Maqaa</th>
-                  <th>Gosa</th>
-                  <th>Gatii</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="assetTable"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- PIROJEKTII -->
-      <div id="pirojektii" class="page hidden">
-        <div class="panel">
-          <h2>🏗️ Pirojektoota</h2>
-
-          <form onsubmit="addProject(event)">
-            <input id="projectName" placeholder="Maqaa pirojektii" required>
-            <input id="projectLocation" placeholder="Bakka" required>
-            <input id="projectBudget" type="number" placeholder="Budget Birr" required>
-            <select id="projectStatus">
-              <option>Karoorfame</option>
-              <option>Jalqabame</option>
-              <option>Hojii irra jira</option>
-              <option>Xumurame</option>
-            </select>
-            <button>➕ Pirojektii Galmeessi</button>
-          </form>
-
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Maqaa</th>
-                  <th>Bakka</th>
-                  <th>Budget</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="projectTable"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- SUURAA -->
-      <div id="suuraa" class="page hidden">
-        <div class="panel">
-          <h2>📸 Galmee Suuraa</h2>
-
-          <input type="file" id="photoInput" accept="image/*" multiple
-                 onchange="previewPhotos(event)">
-
-          <div id="photoGallery" class="gallery"></div>
-        </div>
-      </div>
-
-      <!-- GABAASA -->
-      <div id="gabaasa" class="page hidden">
-        <div class="panel">
-          <h2>📊 Gabaasa</h2>
-
-          <div class="report-box">
-            <h3>Cuunfaa Maallaqaa</h3>
-            <p>💰 Galii: <b id="reportIncome">0 Birr</b></p>
-            <p>💸 Baasii: <b id="reportExpense">0 Birr</b></p>
-            <p>💵 Hafe: <b id="reportBalance">0 Birr</b></p>
-          </div>
-
-          <button onclick="window.print()">🖨️ Print Gabaasa</button>
-        </div>
-      </div>
-
-      <!-- USERS -->
-      <div id="users" class="page hidden">
-        <div class="panel">
-          <h2>👥 Bulchiinsa Users</h2>
-
-          <form onsubmit="addUser(event)">
-            <input id="newUser" placeholder="Maqaa user" required>
-            <select id="userRole">
-              <option>Admin</option>
-              <option>Finance</option>
-              <option>GIS Officer</option>
-              <option>Project Officer</option>
-              <option>Viewer</option>
-            </select>
-            <button>➕ User Dabali</button>
-          </form>
-
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>User</th>
-                  <th>Role</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="userTable"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-    </main>
-  </section>
-
-  <script src="app.js"></script>
-</body>
-</html>
+<section id="audit" class="page"><h2>Audit Log</h2><div class="panel"><div id="auditOut" class="tablewrap"></div></div></section>
+<section id="backup" class="page"><h2>Backup & Restore</h2><div class="panel"><button onclick="backup()">💾 Backup JSON</button><input id="restoreFile" type="file" accept=".json"><button onclick="restore()">Restore</button><p class="muted">Kun prototype/local mode dha; production server backup database irratti qophaa'a.</p></div></section>
+</main></div></div>
+<script>
+const roles={admin:['*'],finance:['dash','finance','expense','reports','excel'],gis:['dash','gis','projects','assets','reports'],data:['dash','people','assets','projects','gis'],supervisor:['*']};
+let role='', db=JSON.parse(localStorage.getItem('ccdms_full')||'null')||{income:[],expense:[],people:[],assets:[],projects:[],gis:[],audit:[]};
+const save=()=>localStorage.setItem('ccdms_full',JSON.stringify(db));
+function login(){let u=lu.value,p=lp.value,ok=['admin','finance','gis','data','supervisor'].includes(u)&&p==='1234';if(!ok)return alert('Username ykn password sirrii miti');role=u;sessionStorage.role=role;login.style.display='none';app.classList.remove('hidden');who.textContent=role.toUpperCase();auditLog('LOGIN','Sirna seene');renderAll();}
+function logout(){sessionStorage.clear();location.reload()}
+if(sessionStorage.role){role=sessionStorage.role;login.style.display='none';app.classList.remove('hidden');who.textContent=role.toUpperCase();renderAll()}
+function allowed(id){return role==='admin'||role==='supervisor'||(roles[role]||[]).includes(id)}
+function show(id,b){if(!allowed(id)){alert('Hayyama gahaa hin qabdu.');return}document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));if(b)b.classList.add('active');}
+function auditLog(action,detail){db.audit.unshift({time:new Date().toLocaleString(),user:role,action,detail});db.audit=db.audit.slice(0,500);save()}
+function val(id){return document.getElementById(id).value}
+function addIncome(){if(!allowed('finance'))return alert('Hayyama hin qabdu');db.income.push({date:val('fiDate'),source:val('fiSource'),receipt:val('fiReceipt'),amount:+val('fiAmount'),office:val('fiOffice'),note:val('fiNote')});auditLog('CREATE','Galii');renderAll()}
+function addExpense(){if(!allowed('expense'))return alert('Hayyama hin qabdu');db.expense.push({date:val('exDate'),type:val('exType'),voucher:val('exVoucher'),amount:+val('exAmount'),office:val('exOffice'),note:val('exNote')});auditLog('CREATE','Baasii');renderAll()}
+function addPerson(){if(!allowed('people'))return alert('Hayyama hin qabdu');db.people.push({id:val('pId'),name:val('pName'),sex:val('pSex'),age:+val('pAge'),kebele:val('pKeb'),phone:val('pPhone'),job:val('pJob')});auditLog('CREATE','Uummata');renderAll()}
+async function photo(id){let f=document.getElementById(id).files[0];if(!f)return '';return await new Promise(r=>{let x=new FileReader();x.onload=()=>r(x.result);x.readAsDataURL(f)})}
+async function addAsset(){if(!allowed('assets'))return alert('Hayyama hin qabdu');db.assets.push({id:val('aId'),name:val('aName'),type:val('aType'),qty:+val('aQty'),value:+val('aValue'),place:val('aPlace'),condition:val('aCond'),photo:await photo('aPhoto')});auditLog('CREATE','Qabeenya');renderAll()}
+async function addProject(){if(!allowed('projects'))return alert('Hayyama hin qabdu');db.projects.push({id:val('prId'),name:val('prName'),type:val('prType'),budget:+val('prBudget'),status:val('prStatus'),place:val('prPlace'),photo:await photo('prPhoto'),note:val('prNote')});auditLog('CREATE','Pirojektii');renderAll()}
+function renderAll(){dIncome.textContent=db.income.reduce((a,x)=>a+(+x.amount||0),0).toLocaleString();dExpense.textContent=db.expense.reduce((a,x)=>a+(+x.amount||0),0).toLocaleString();dBalance.textContent=(+dIncome.textContent.replace(/,/g,'')-(+dExpense.textContent.replace(/,/g,'')||0)).toLocaleString();dPeople.textContent=db.people.length;dAssets.textContent=db.assets.length;dProjects.textContent=db.projects.length;renderTable('income','fit');renderTable('expense','ext');renderTable('people','pt');renderTable('assets','at');renderTable('projects','prt');renderGis();renderAudit();save()}
+function renderTable(type,id,q=''){let a=db[type]||[];q=q.toLowerCase();a=a.filter(x=>JSON.stringify(x).toLowerCase().includes(q));let cols={income:['date','source','receipt','amount','office','note'],expense:['date','type','voucher','amount','office','note'],people:['id','name','sex','age','kebele','phone','job'],assets:['id','name','type','qty','value','place','condition','photo'],projects:['id','name','type','budget','status','place','photo','note']}[type];let h='<table><tr>'+cols.map(c=>'<th>'+c+'</th>').join('')+'</tr>';a.forEach(x=>{h+='<tr>'+cols.map(c=>c==='photo'&&x[c]?'<td><img class="photo" src="'+x[c]+'"></td>':'<td>'+((x[c]??''))+'</td>').join('')+'</tr>'});document.getElementById(id).innerHTML=h+'</table>'}
+function renderGis(){let m=document.getElementById('map');m.innerHTML='';db.gis.forEach(x=>{let p=document.createElement('div');p.className='point';p.style.left=x.x+'%';p.style.top=x.y+'%';p.title=x.type+': '+x.name;p.textContent='📍';m.appendChild(p)});m.onclick=e=>{if(e.target!==m)return;let r=m.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*100,y=(e.clientY-r.top)/r.height*100;db.gis.push({type:gType.value,name:gName.value||'Point',x,y,lat:null,lon:null});auditLog('CREATE','GIS point');renderGis()};let h='<table><tr><th>Gosa</th><th>Maqaa</th><th>Lat</th><th>Lon</th></tr>';db.gis.forEach(x=>h+='<tr><td>'+x.type+'</td><td>'+x.name+'</td><td>'+x.lat+'</td><td>'+x.lon+'</td></tr>');gt.innerHTML=h+'</table>'}
+function gps(){if(!navigator.geolocation)return alert('GPS hin deeggaramu');navigator.geolocation.getCurrentPosition(pos=>{db.gis.push({type:gType.value,name:gName.value||'GPS Point',x:50,y:50,lat:pos.coords.latitude,lon:pos.coords.longitude});auditLog('CREATE','GPS point');renderGis();alert('GPS point galmaa’e')},()=>alert('GPS permission kenni ykn device irratti location banu'))}
+function clearGis(){if(confirm('GIS points hunda haqnaa?')){db.gis=[];auditLog('DELETE','GIS hunda');renderGis()}}
+function report(){let f=val('rFrom'),t=val('rTo');let inc=db.income.filter(x=>(!f||x.date>=f)&&(!t||x.date<=t)),ex=db.expense.filter(x=>(!f||x.date>=f)&&(!t||x.date<=t));let I=inc.reduce((a,x)=>a+(+x.amount||0),0),E=ex.reduce((a,x)=>a+(+x.amount||0),0);reportOut.innerHTML='<h3>Gabaasa '+(f||'Jalqaba')+' — '+(t||'Amma')+'</h3><p>Galii: <b>'+I.toLocaleString()+' ETB</b> | Baasii: <b>'+E.toLocaleString()+' ETB</b> | Hafe: <b>'+(I-E).toLocaleString()+' ETB</b></p><p>Galmee Galii: '+inc.length+' | Baasii: '+ex.length+'</p>'}
+function csv(type){let a=db[type],keys=Object.keys(a[0]||{id:'',name:''});let s=keys.join(',')+'\\n'+a.map(x=>keys.map(k=>'"'+String(x[k]??'').replaceAll('"','""')+'"').join(',')).join('\\n');let b=new Blob([s],{type:'text/csv'}),u=URL.createObjectURL(b),z=document.createElement('a');z.href=u;z.download=type+'.csv';z.click()}
+function imp(){let f=impFile.files[0];if(!f)return;let type=impType.value;let r=new FileReader();r.onload=()=>{let lines=r.result.split(/\\r?\\n/).filter(Boolean),keys=lines.shift().split(',').map(x=>x.replace(/^"|"$/g,''));db[type].push(...lines.map(line=>{let v=line.split(',').map(x=>x.replace(/^"|"$/g,''));return Object.fromEntries(keys.map((k,i)=>[k,v[i]||'']))}));auditLog('IMPORT','CSV '+type);renderAll();alert('Import xumurame')};r.readAsText(f)}
+function backup(){let b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='calanqoo-backup.json';a.click()}
+function restore(){let f=restoreFile.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);auditLog('RESTORE','Backup restore');renderAll();alert('Restore xumurame')}catch(e){alert('JSON sirrii miti')}};r.readAsText(f)}
+function renderAudit(){let h='<table><tr><th>Yeroo</th><th>User</th><th>Action</th><th>Detail</th></tr>';db.audit.forEach(x=>h+='<tr><td>'+x.time+'</td><td>'+x.user+'</td><td>'+x.action+'</td><td>'+x.detail+'</td></tr>');auditOut.innerHTML=h+'</table>'}
+</script></body></html>

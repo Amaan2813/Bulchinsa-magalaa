@@ -1,0 +1,10 @@
+-- Production PostgreSQL schema for Calanqoo CDMS
+CREATE TABLE users(id BIGSERIAL PRIMARY KEY, username TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL, role TEXT NOT NULL CHECK(role IN ('admin','finance','gis','data','supervisor')), active BOOLEAN DEFAULT TRUE, created_at TIMESTAMPTZ DEFAULT now());
+CREATE TABLE income(id BIGSERIAL PRIMARY KEY, entry_date DATE NOT NULL, source TEXT, receipt_no TEXT, amount NUMERIC(14,2) NOT NULL, office TEXT, note TEXT, created_by BIGINT REFERENCES users(id), created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now());
+CREATE TABLE expenses(id BIGSERIAL PRIMARY KEY, entry_date DATE NOT NULL, expense_type TEXT, voucher_no TEXT, amount NUMERIC(14,2) NOT NULL, office TEXT, note TEXT, created_by BIGINT REFERENCES users(id), created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now());
+CREATE TABLE people(id BIGSERIAL PRIMARY KEY, person_code TEXT UNIQUE, name TEXT NOT NULL, sex TEXT, age INT, kebele TEXT, phone TEXT, job TEXT, created_by BIGINT REFERENCES users(id), created_at TIMESTAMPTZ DEFAULT now());
+CREATE TABLE assets(id BIGSERIAL PRIMARY KEY, asset_code TEXT UNIQUE, name TEXT NOT NULL, asset_type TEXT, quantity NUMERIC, value NUMERIC(14,2), place TEXT, condition TEXT, photo_url TEXT, created_by BIGINT REFERENCES users(id), created_at TIMESTAMPTZ DEFAULT now());
+CREATE TABLE projects(id BIGSERIAL PRIMARY KEY, project_code TEXT UNIQUE, name TEXT NOT NULL, project_type TEXT, budget NUMERIC(14,2), status TEXT, place TEXT, photo_url TEXT, note TEXT, created_by BIGINT REFERENCES users(id), created_at TIMESTAMPTZ DEFAULT now());
+CREATE TABLE gis_features(id BIGSERIAL PRIMARY KEY, feature_type TEXT NOT NULL, name TEXT, geom geometry(Geometry,4326), attributes JSONB, photo_url TEXT, created_by BIGINT REFERENCES users(id), created_at TIMESTAMPTZ DEFAULT now());
+CREATE TABLE audit_log(id BIGSERIAL PRIMARY KEY, user_id BIGINT REFERENCES users(id), action TEXT NOT NULL, table_name TEXT, record_id BIGINT, details JSONB, created_at TIMESTAMPTZ DEFAULT now());
+CREATE INDEX gis_features_geom_idx ON gis_features USING GIST(geom);
